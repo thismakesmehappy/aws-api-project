@@ -36,6 +36,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '16'
+      
+      - name: Setup Maven settings.xml with AWS repository
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml << EOF
+          <settings>
+            <profiles>
+              <profile>
+                <id>aws-repositories</id>
+                <repositories>
+                  <repository>
+                    <id>aws-release</id>
+                    <name>AWS Release Repository</name>
+                    <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
+                  </repository>
+                </repositories>
+                <pluginRepositories>
+                  <pluginRepository>
+                    <id>aws-release</id>
+                    <name>AWS Release Repository</name>
+                    <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
+                  </pluginRepository>
+                </pluginRepositories>
+              </profile>
+            </profiles>
+            <activeProfiles>
+              <activeProfile>aws-repositories</activeProfile>
+            </activeProfiles>
+          </settings>
+          EOF
           
       - name: Install dependencies
         run: npm run install:all
