@@ -21,6 +21,8 @@ The project has three environments:
 - **Staging**: Pre-production environment for final testing
 - **Production**: Live environment for end users
 
+All environments are deployed to the **us-east-1** (N. Virginia) AWS region.
+
 ## How to Use the Pipeline
 
 ### Automatic Deployments
@@ -50,7 +52,8 @@ The following GitHub secrets need to be configured:
 
 - `AWS_ACCESS_KEY_ID`: AWS access key with permissions to deploy resources
 - `AWS_SECRET_ACCESS_KEY`: Corresponding AWS secret key
-- `AWS_REGION`: AWS region to deploy resources to
+
+The region is hardcoded to **us-east-1** in both the CDK configuration and the GitHub Actions workflow.
 
 ## Local Development
 

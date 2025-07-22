@@ -6,6 +6,10 @@ set -e  # Exit on any error
 
 echo "🚀 Starting local pipeline simulation..."
 
+# Set AWS region to us-east-1
+export AWS_REGION=us-east-1
+echo "🌎 Using AWS region: $AWS_REGION"
+
 # Step 1: Install dependencies
 echo "📦 Installing dependencies..."
 npm run install:all

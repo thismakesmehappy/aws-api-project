@@ -9,7 +9,7 @@ const app = new cdk.App();
 new ApiStack(app, 'DevApiStack', {
   env: { 
     account: process.env.CDK_DEFAULT_ACCOUNT, 
-    region: process.env.CDK_DEFAULT_REGION 
+    region: 'us-east-1' 
   },
   stage: 'dev',
   budgetLimit: 4, // $4 monthly budget
@@ -21,7 +21,7 @@ new ApiStack(app, 'DevApiStack', {
 new ApiStack(app, 'StagingApiStack', {
   env: { 
     account: process.env.CDK_DEFAULT_ACCOUNT, 
-    region: process.env.CDK_DEFAULT_REGION 
+    region: 'us-east-1' 
   },
   stage: 'staging',
   budgetLimit: 4, // $4 monthly budget
@@ -33,7 +33,7 @@ new ApiStack(app, 'StagingApiStack', {
 new ApiStack(app, 'ProdApiStack', {
   env: { 
     account: process.env.CDK_DEFAULT_ACCOUNT, 
-    region: process.env.CDK_DEFAULT_REGION 
+    region: 'us-east-1' 
   },
   stage: 'prod',
   budgetLimit: 4, // $4 monthly budget
