@@ -13,27 +13,9 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <aws.java.sdk.version>2.20.43</aws.java.sdk.version>
-        <aws.coral.version>0.5.0</aws.coral.version>
-        <smithy.version>1.27.2</smithy.version>
+        <jackson.version>2.15.2</jackson.version>
         <junit.version>5.9.2</junit.version>
     </properties>
-
-    <!-- Add AWS Maven repository -->
-    <repositories>
-        <repository>
-            <id>aws-release</id>
-            <name>AWS Release Repository</name>
-            <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
-        </repository>
-    </repositories>
-    
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aws-release</id>
-            <name>AWS Release Repository</name>
-            <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
@@ -75,18 +57,16 @@
             <artifactId>dynamodb-enhanced</artifactId>
         </dependency>
         
-        <!-- AWS Coral -->
+        <!-- Jackson for JSON processing -->
         <dependency>
-            <groupId>software.amazon.coral</groupId>
-            <artifactId>coral-service</artifactId>
-            <version>${aws.coral.version}</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
-        
-        <!-- Smithy -->
         <dependency>
-            <groupId>software.amazon.smithy</groupId>
-            <artifactId>smithy-model</artifactId>
-            <version>${smithy.version}</version>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         
         <!-- Logging -->
@@ -163,25 +143,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.0</version>
-            </plugin>
-            
-            <!-- Smithy Maven Plugin -->
-            <plugin>
-                <groupId>software.amazon.smithy</groupId>
-                <artifactId>smithy-maven-plugin</artifactId>
-                <version>${smithy.version}</version>
-                <configuration>
-                    <allowUnknownTraits>true</allowUnknownTraits>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-smithy-model</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate-sources</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

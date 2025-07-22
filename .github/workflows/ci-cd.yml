@@ -31,53 +31,31 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+          cache: 'maven'
           
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '16'
-      
-      - name: Setup Maven settings.xml with AWS repository
-        run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << EOF
-          <settings>
-            <profiles>
-              <profile>
-                <id>aws-repositories</id>
-                <repositories>
-                  <repository>
-                    <id>aws-release</id>
-                    <name>AWS Release Repository</name>
-                    <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
-                  </repository>
-                </repositories>
-                <pluginRepositories>
-                  <pluginRepository>
-                    <id>aws-release</id>
-                    <name>AWS Release Repository</name>
-                    <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
-                  </pluginRepository>
-                </pluginRepositories>
-              </profile>
-            </profiles>
-            <activeProfiles>
-              <activeProfile>aws-repositories</activeProfile>
-            </activeProfiles>
-          </settings>
-          EOF
+          cache: 'npm'
           
-      - name: Install dependencies
-        run: npm run install:all
-        
-      - name: Run service tests
-        run: npm run test:service
+      - name: Build and install model project
+        run: |
+          cd model
+          mvn clean install
+          cd ..
+          
+      - name: Build and test service project
+        run: |
+          cd service
+          mvn clean package
+          cd ..
         
       - name: Run integration tests locally
-        run: npm run test:integration
-        
-      - name: Build service
-        run: npm run build:service
+        run: |
+          cd integration-tests
+          npm install
+          npm test
         
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -100,6 +78,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '16'
+          cache: 'npm'
           
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -145,6 +124,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '16'
+          cache: 'npm'
           
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -200,6 +180,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '16'
+          cache: 'npm'
           
       - name: Download build artifacts
         uses: actions/download-artifact@v4

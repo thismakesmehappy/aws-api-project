@@ -1,136 +1,230 @@
-# API Model Definitions
+# API Documentation
 
-This directory contains the Smithy model definitions for our API.
+## Overview
 
-## What is Smithy?
+This API provides CRUD operations for managing items in a serverless environment using AWS services.
 
-Smithy is a language for defining services and SDKs. It provides a clean, concise way to define your API contract, which can then be used to generate code, documentation, and more.
+## API Definition
 
-## Benefits of Using Smithy
+The API is defined using OpenAPI 3.0.3 specification in `src/main/resources/openapi.yaml`.
 
-1. **Strong Typing**: Define your API with a strongly-typed interface
-2. **Code Generation**: Generate client and server code from your model
-3. **Documentation**: Automatically generate API documentation
-4. **Validation**: Validate requests and responses against your model
-5. **Versioning**: Track changes to your API over time
+## Endpoints
 
-## Project Structure
+### List Items
 
-```
-model/
-├── src/
-│   └── main/
-│       └── smithy/
-│           ├── api.smithy         # Main API definition
-│           ├── operations/        # API operations
-│           └── shapes/            # Data shapes/models
-└── test/                          # Model tests
+```http
+GET /items
 ```
 
-## Getting Started
+Query Parameters:
+- `limit` (optional): Maximum number of items to return (1-100, default: 20)
 
-1. Install the Smithy CLI:
-   ```bash
-   npm install -g smithy-cli
-   ```
+Response:
+```json
+[
+  {
+    "id": "string",
+    "name": "string",
+    "description": "string",
+    "createdAt": "string",
+    "updatedAt": "string"
+  }
+]
+```
 
-2. Validate your Smithy model:
-   ```bash
-   smithy validate
-   ```
+### Get Item
 
-3. Generate code from your model:
-   ```bash
-   smithy build
-   ```
+```http
+GET /items/{itemId}
+```
 
-## Example Smithy Model
+Path Parameters:
+- `itemId`: ID of the item to retrieve
 
-```smithy
-namespace com.example.api
-
-use aws.protocols#restJson1
-
-/// API for managing items
-@restJson1
-service ItemService {
-    version: "1.0.0",
-    operations: [GetItem, ListItems, CreateItem]
-}
-
-/// Get a single item by ID
-@http(method: "GET", uri: "/items/{itemId}")
-operation GetItem {
-    input: GetItemInput,
-    output: GetItemOutput
-}
-
-structure GetItemInput {
-    /// The ID of the item to retrieve
-    @required
-    @httpLabel
-    itemId: String
-}
-
-structure GetItemOutput {
-    /// The retrieved item
-    @required
-    item: Item
-}
-
-/// An item in the system
-structure Item {
-    /// Unique identifier for the item
-    @required
-    id: String,
-    
-    /// Name of the item
-    @required
-    name: String,
-    
-    /// Description of the item
-    description: String,
-    
-    /// Creation timestamp
-    @required
-    createdAt: Timestamp
+Response:
+```json
+{
+  "id": "string",
+  "name": "string",
+  "description": "string",
+  "createdAt": "string",
+  "updatedAt": "string"
 }
 ```
 
-## Authentication in Models
+### Create Item
 
-Smithy allows you to define authentication requirements in your models:
+```http
+POST /items
+```
 
-```smithy
-@auth([
-    {
-        type: "cognitoUserPools",
-        placement: "header",
-        name: "Authorization"
-    }
-])
-operation CreateItem {
-    input: CreateItemInput,
-    output: CreateItemOutput
+Request Body:
+```json
+{
+  "name": "string",
+  "description": "string"
 }
 ```
 
-This ensures that your API implementation enforces the authentication requirements defined in your model.
-
-## Testing Models
-
-You can write tests for your Smithy models to ensure they behave as expected:
-
-```typescript
-// Example test for validating a Smithy model
-test('Item model should require id and name', () => {
-  const validator = new SmithyValidator();
-  const result = validator.validate('Item', {
-    description: 'Test item'
-  });
-  
-  expect(result.valid).toBe(false);
-  expect(result.errors).toContain('Missing required field: id');
-  expect(result.errors).toContain('Missing required field: name');
-});
+Response:
+```json
+{
+  "id": "string",
+  "name": "string",
+  "description": "string",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
 ```
+
+### Update Item
+
+```http
+PUT /items/{itemId}
+```
+
+Path Parameters:
+- `itemId`: ID of the item to update
+
+Request Body:
+```json
+{
+  "name": "string",
+  "description": "string"
+}
+```
+
+Response:
+```json
+{
+  "id": "string",
+  "name": "string",
+  "description": "string",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+### Delete Item
+
+```http
+DELETE /items/{itemId}
+```
+
+Path Parameters:
+- `itemId`: ID of the item to delete
+
+Response: 204 No Content
+
+## Authentication
+
+The API uses Amazon Cognito for authentication. Include the JWT token in the Authorization header:
+
+```http
+Authorization: Bearer <token>
+```
+
+## Error Responses
+
+The API returns standard HTTP status codes and JSON error responses:
+
+```json
+{
+  "code": "string",
+  "message": "string"
+}
+```
+
+Common error codes:
+- 400: Bad Request
+- 401: Unauthorized
+- 404: Not Found
+- 500: Internal Server Error
+
+## Rate Limiting
+
+- Default rate limit: 1000 requests per second
+- Burst limit: 2000 requests
+
+## Data Models
+
+### Item
+
+```json
+{
+  "id": "string",
+  "name": "string",
+  "description": "string",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+### NewItem
+
+```json
+{
+  "name": "string",
+  "description": "string"
+}
+```
+
+### Error
+
+```json
+{
+  "code": "string",
+  "message": "string"
+}
+```
+
+## Code Generation
+
+The API models are automatically generated using the OpenAPI Generator Maven plugin:
+
+```bash
+cd model
+mvn clean generate-sources
+```
+
+Generated code is placed in `src/gen/java/main/`.
+
+## Testing the API
+
+### Using curl
+
+List items:
+```bash
+curl -H "Authorization: Bearer <token>" \
+  https://api.example.com/items
+```
+
+Create item:
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test Item","description":"Test Description"}' \
+  https://api.example.com/items
+```
+
+### Using Postman
+
+1. Import the OpenAPI definition
+2. Set up an environment with:
+   - `baseUrl`: Your API endpoint
+   - `token`: Your Cognito token
+
+## Versioning
+
+The API uses semantic versioning (MAJOR.MINOR.PATCH):
+- MAJOR: Breaking changes
+- MINOR: New features (backwards compatible)
+- PATCH: Bug fixes (backwards compatible)
+
+## Support
+
+For API issues or questions:
+1. Check the documentation
+2. Review CloudWatch logs
+3. Contact the development team

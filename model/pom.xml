@@ -12,67 +12,100 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <smithy.version>1.27.2</smithy.version>
+        <openapi-generator.version>6.6.0</openapi-generator.version>
+        <jackson.version>2.15.2</jackson.version>
+        <swagger-annotations.version>2.2.15</swagger-annotations.version>
+        <javax-annotation.version>1.3.2</javax-annotation.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <findbugs.version>3.0.2</findbugs.version>
     </properties>
 
-    <!-- Add AWS Maven repository -->
-    <repositories>
-        <repository>
-            <id>aws-release</id>
-            <name>AWS Release Repository</name>
-            <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
-        </repository>
-    </repositories>
-    
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aws-release</id>
-            <name>AWS Release Repository</name>
-            <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <dependencies>
-        <!-- Smithy -->
+        <!-- OpenAPI Dependencies -->
         <dependency>
-            <groupId>software.amazon.smithy</groupId>
-            <artifactId>smithy-model</artifactId>
-            <version>${smithy.version}</version>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations.version}</version>
+        </dependency>
+        
+        <!-- Jackson for JSON processing -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
-            <groupId>software.amazon.smithy</groupId>
-            <artifactId>smithy-aws-traits</artifactId>
-            <version>${smithy.version}</version>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        
+        <!-- Jackson Nullable -->
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${jackson-databind-nullable.version}</version>
+        </dependency>
+
+        <!-- Java EE / Jakarta EE APIs -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>${javax-annotation.version}</version>
+        </dependency>
+
+        <!-- FindBugs JSR305 Annotations -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>${findbugs.version}</version>
+        </dependency>
+        
+        <!-- Validation API -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Smithy Maven Plugin -->
+            <!-- OpenAPI Generator Maven Plugin -->
             <plugin>
-                <groupId>software.amazon.smithy</groupId>
-                <artifactId>smithy-maven-plugin</artifactId>
-                <version>${smithy.version}</version>
-                <configuration>
-                    <allowUnknownTraits>true</allowUnknownTraits>
-                </configuration>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator.version}</version>
                 <executions>
                     <execution>
-                        <id>generate-smithy-model</id>
-                        <phase>generate-sources</phase>
+                        <id>generate-java-models</id>
                         <goals>
-                            <goal>generate-sources</goal>
+                            <goal>generate</goal>
                         </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>native</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <configOptions>
+                                <sourceFolder>src/gen/java/main</sourceFolder>
+                                <dateLibrary>java8</dateLibrary>
+                                <java8>true</java8>
+                                <apiPackage>com.example.api</apiPackage>
+                                <modelPackage>com.example.model</modelPackage>
+                                <invokerPackage>com.example.client</invokerPackage>
+                                <serializableModel>true</serializableModel>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useJakartaEe>false</useJakartaEe>
+                                <annotationLibrary>none</annotationLibrary>
+                            </configOptions>
+                        </configuration>
                     </execution>
                 </executions>
-                <dependencies>
-                    <!-- Add Java code generator -->
-                    <dependency>
-                        <groupId>software.amazon.smithy</groupId>
-                        <artifactId>smithy-java-codegen</artifactId>
-                        <version>${smithy.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             
             <!-- Maven Compiler Plugin -->
