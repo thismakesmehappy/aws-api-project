@@ -1,0 +1,23 @@
+{
+  "name": "aws-api-project",
+  "version": "0.1.0",
+  "description": "Serverless API project using AWS free tier services",
+  "scripts": {
+    "install:all": "npm install && cd infra && npm install && cd ../model && npm install && cd ../local-dev && npm install && cd ../integration-tests && npm install && cd ../service && mvn clean install",
+    "start:local": "cd local-dev && npm start",
+    "test:integration": "cd integration-tests && npm test",
+    "test:service": "cd service && mvn test",
+    "build:service": "cd service && mvn package",
+    "deploy:dev": "cd service && mvn package && cd ../infra && npx cdk deploy DevApiStack",
+    "deploy:staging": "cd service && mvn package && cd ../infra && npx cdk deploy StagingApiStack",
+    "deploy:prod": "cd service && mvn package && cd ../infra && npx cdk deploy ProdApiStack",
+    "diff:dev": "cd infra && npx cdk diff DevApiStack",
+    "diff:staging": "cd infra && npx cdk diff StagingApiStack",
+    "diff:prod": "cd infra && npx cdk diff ProdApiStack",
+    "destroy:dev": "cd infra && npx cdk destroy DevApiStack",
+    "destroy:staging": "cd infra && npx cdk destroy StagingApiStack",
+    "destroy:prod": "cd infra && npx cdk destroy ProdApiStack"
+  },
+  "author": "",
+  "license": "MIT"
+}

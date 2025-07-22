@@ -1,0 +1,13 @@
+{
+  "name": "aws-api-project-integration-tests",
+  "version": "0.1.0",
+  "description": "Integration tests for AWS API Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "axios": "^1.4.0"
+  }
+}
