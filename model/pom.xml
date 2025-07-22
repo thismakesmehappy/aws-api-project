@@ -15,6 +15,23 @@
         <smithy.version>1.27.2</smithy.version>
     </properties>
 
+    <!-- Add AWS Maven repository -->
+    <repositories>
+        <repository>
+            <id>aws-release</id>
+            <name>AWS Release Repository</name>
+            <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
+        </repository>
+    </repositories>
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aws-release</id>
+            <name>AWS Release Repository</name>
+            <url>https://d2jrmugq4soldf.cloudfront.net/release</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
         <!-- Smithy -->
         <dependency>
