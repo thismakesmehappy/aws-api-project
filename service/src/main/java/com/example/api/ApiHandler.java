@@ -4,235 +4,172 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.example.model.Error;
-import com.example.model.Item;
-import com.example.model.NewItem;
+import com.example.api.handlers.*;
+import com.example.api.model.Error;
+import com.example.api.utils.HeaderUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.model.GetItemEnhancedRequest;
-import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
     private static final Logger logger = LoggerFactory.getLogger(ApiHandler.class);
-    private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-    private static final String TABLE_NAME = System.getenv("TABLE_NAME");
-    private static final DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
-            .region(Region.of(System.getenv("AWS_REGION")))
-            .build();
-    private static final DynamoDbEnhancedClient enhancedClient = DynamoDbEnhancedClient.builder()
-            .dynamoDbClient(dynamoDbClient)
-            .build();
+    private final Map<RouteKey, RouteHandler> handlers;
+    private final ObjectMapper objectMapper;
+
+    public ApiHandler() {
+        this.objectMapper = new ObjectMapper();
+        this.handlers = new HashMap<>();
+        
+        // Register handlers for each route
+        registerHandlers();
+    }
     
+    private void registerHandlers() {
+        // Public endpoint
+        handlers.put(new RouteKey("GET", "/public"), new GetPublicDataHandler());
+        
+        // Protected endpoint
+        handlers.put(new RouteKey("GET", "/protected"), new GetProtectedDataHandler());
+        
+        // Item management endpoints
+        handlers.put(new RouteKey("GET", "/items"), new ListItemsHandler());
+        handlers.put(new RouteKey("POST", "/items"), new CreateItemHandler());
+        handlers.put(new RouteKey("GET", "/items/{itemId}"), new GetItemHandler());
+        handlers.put(new RouteKey("PUT", "/items/{itemId}"), new UpdateItemHandler());
+        handlers.put(new RouteKey("DELETE", "/items/{itemId}"), new DeleteItemHandler());
+        
+        // Add new handlers here when adding new endpoints
+    }
+
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
         logger.info("Received request: {}", input);
-        
+
         try {
             String path = input.getPath();
             String httpMethod = input.getHttpMethod();
             
-            // Route the request based on path and method
-            if (path.matches("/items/?") && "GET".equalsIgnoreCase(httpMethod)) {
-                return listItems(input);
-            } else if (path.matches("/items/?") && "POST".equalsIgnoreCase(httpMethod)) {
-                return createItem(input);
-            } else if (path.matches("/items/[^/]+/?") && "GET".equalsIgnoreCase(httpMethod)) {
-                return getItem(input);
-            } else if (path.matches("/items/[^/]+/?") && "PUT".equalsIgnoreCase(httpMethod)) {
-                return updateItem(input);
-            } else if (path.matches("/items/[^/]+/?") && "DELETE".equalsIgnoreCase(httpMethod)) {
-                return deleteItem(input);
-            } else {
-                return createErrorResponse(404, "NOT_FOUND", "Resource not found");
+            // Find matching handler
+            RouteHandler handler = findHandler(httpMethod, path);
+            
+            if (handler != null) {
+                // Check if authentication is required
+                if (handler.requiresAuthentication()) {
+                    String token = HeaderUtils.extractBearerToken(input).orElse(null);
+                    
+                    if (token == null) {
+                        return createUnauthorizedResponse();
+                    }
+                    
+                    // In a real implementation, you would validate the token here
+                }
+                
+                return handler.handleRequest(input, context);
             }
+            
+            // No handler found
+            return createNotFoundResponse("Resource not found");
         } catch (Exception e) {
             logger.error("Error processing request", e);
             return createErrorResponse(500, "INTERNAL_SERVER_ERROR", "An internal server error occurred");
         }
     }
     
-    private APIGatewayProxyResponseEvent listItems(APIGatewayProxyRequestEvent input) {
-        try {
-            // Extract query parameters
-            Map<String, String> queryParams = input.getQueryStringParameters();
-            int limit = 20; // Default limit
-            
-            if (queryParams != null && queryParams.containsKey("limit")) {
-                try {
-                    limit = Integer.parseInt(queryParams.get("limit"));
-                    if (limit < 1 || limit > 100) {
-                        limit = 20; // Reset to default if out of range
-                    }
-                } catch (NumberFormatException e) {
-                    // Ignore and use default
-                }
+    private RouteHandler findHandler(String method, String path) {
+        // First try exact match
+        RouteKey exactKey = new RouteKey(method, path);
+        if (handlers.containsKey(exactKey)) {
+            return handlers.get(exactKey);
+        }
+        
+        // Try pattern matching for path parameters
+        for (Map.Entry<RouteKey, RouteHandler> entry : handlers.entrySet()) {
+            RouteKey key = entry.getKey();
+            if (key.getMethod().equals(method) && pathMatches(key.getPath(), path)) {
+                return entry.getValue();
             }
-            
-            // Mock implementation - in a real app, you'd query DynamoDB
-            List<Item> items = new ArrayList<>();
-            for (int i = 1; i <= limit; i++) {
-                Item item = new Item();
-                item.setId(UUID.randomUUID().toString());
-                item.setName("Item " + i);
-                item.setDescription("Description for item " + i);
-                item.setCreatedAt(OffsetDateTime.now().toString());
-                item.setUpdatedAt(OffsetDateTime.now().toString());
-                items.add(item);
-            }
-            
-            return createSuccessResponse(200, items);
-        } catch (Exception e) {
-            logger.error("Error listing items", e);
-            return createErrorResponse(500, "INTERNAL_SERVER_ERROR", "Error listing items");
         }
+        
+        return null;
     }
     
-    private APIGatewayProxyResponseEvent getItem(APIGatewayProxyRequestEvent input) {
-        try {
-            String itemId = extractItemId(input.getPath());
-            
-            // Mock implementation - in a real app, you'd query DynamoDB
-            Item item = new Item();
-            item.setId(itemId);
-            item.setName("Sample Item");
-            item.setDescription("This is a sample item");
-            item.setCreatedAt(OffsetDateTime.now().minusDays(1).toString());
-            item.setUpdatedAt(OffsetDateTime.now().toString());
-            
-            return createSuccessResponse(200, item);
-        } catch (Exception e) {
-            logger.error("Error getting item", e);
-            return createErrorResponse(500, "INTERNAL_SERVER_ERROR", "Error getting item");
-        }
+    private boolean pathMatches(String pattern, String path) {
+        // Convert route pattern with path parameters to regex
+        String regex = pattern.replaceAll("\\{[^/]+\\}", "[^/]+");
+        return Pattern.compile("^" + regex + "$").matcher(path).matches();
     }
     
-    private APIGatewayProxyResponseEvent createItem(APIGatewayProxyRequestEvent input) {
-        try {
-            NewItem newItem = objectMapper.readValue(input.getBody(), NewItem.class);
-            
-            // Validate required fields
-            if (newItem.getName() == null || newItem.getName().trim().isEmpty()) {
-                return createErrorResponse(400, "BAD_REQUEST", "Name is required");
-            }
-            
-            // Mock implementation - in a real app, you'd save to DynamoDB
-            Item item = new Item();
-            item.setId(UUID.randomUUID().toString());
-            item.setName(newItem.getName());
-            item.setDescription(newItem.getDescription());
-            item.setCreatedAt(OffsetDateTime.now().toString());
-            item.setUpdatedAt(OffsetDateTime.now().toString());
-            
-            return createSuccessResponse(201, item);
-        } catch (JsonProcessingException e) {
-            logger.error("Error parsing request body", e);
-            return createErrorResponse(400, "BAD_REQUEST", "Invalid request body");
-        } catch (Exception e) {
-            logger.error("Error creating item", e);
-            return createErrorResponse(500, "INTERNAL_SERVER_ERROR", "Error creating item");
-        }
+    private APIGatewayProxyResponseEvent createUnauthorizedResponse() {
+        Error error = new Error("UNAUTHORIZED", "Missing or invalid authentication token");
+        return createResponse(401, error);
     }
     
-    private APIGatewayProxyResponseEvent updateItem(APIGatewayProxyRequestEvent input) {
-        try {
-            String itemId = extractItemId(input.getPath());
-            Item updatedItem = objectMapper.readValue(input.getBody(), Item.class);
-            
-            // Validate required fields
-            if (updatedItem.getName() == null || updatedItem.getName().trim().isEmpty()) {
-                return createErrorResponse(400, "BAD_REQUEST", "Name is required");
-            }
-            
-            // Ensure ID in path matches ID in body, or set it if not provided
-            if (updatedItem.getId() == null || updatedItem.getId().trim().isEmpty()) {
-                updatedItem.setId(itemId);
-            } else if (!updatedItem.getId().equals(itemId)) {
-                return createErrorResponse(400, "BAD_REQUEST", "Item ID in path must match ID in body");
-            }
-            
-            // Mock implementation - in a real app, you'd update in DynamoDB
-            updatedItem.setUpdatedAt(OffsetDateTime.now().toString());
-            
-            return createSuccessResponse(200, updatedItem);
-        } catch (JsonProcessingException e) {
-            logger.error("Error parsing request body", e);
-            return createErrorResponse(400, "BAD_REQUEST", "Invalid request body");
-        } catch (Exception e) {
-            logger.error("Error updating item", e);
-            return createErrorResponse(500, "INTERNAL_SERVER_ERROR", "Error updating item");
-        }
-    }
-    
-    private APIGatewayProxyResponseEvent deleteItem(APIGatewayProxyRequestEvent input) {
-        try {
-            String itemId = extractItemId(input.getPath());
-            
-            // Mock implementation - in a real app, you'd delete from DynamoDB
-            
-            // Return 204 No Content for successful deletion
-            APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-            response.setStatusCode(204);
-            response.setHeaders(Map.of("Content-Type", "application/json"));
-            return response;
-        } catch (Exception e) {
-            logger.error("Error deleting item", e);
-            return createErrorResponse(500, "INTERNAL_SERVER_ERROR", "Error deleting item");
-        }
-    }
-    
-    private String extractItemId(String path) {
-        // Extract the item ID from the path
-        String[] parts = path.split("/");
-        return parts[parts.length - 1];
-    }
-    
-    private APIGatewayProxyResponseEvent createSuccessResponse(int statusCode, Object body) {
-        try {
-            APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-            response.setStatusCode(statusCode);
-            response.setHeaders(Map.of("Content-Type", "application/json"));
-            response.setBody(objectMapper.writeValueAsString(body));
-            return response;
-        } catch (JsonProcessingException e) {
-            logger.error("Error serializing response", e);
-            return createErrorResponse(500, "INTERNAL_SERVER_ERROR", "Error serializing response");
-        }
+    private APIGatewayProxyResponseEvent createNotFoundResponse(String message) {
+        Error error = new Error("NOT_FOUND", message);
+        return createResponse(404, error);
     }
     
     private APIGatewayProxyResponseEvent createErrorResponse(int statusCode, String code, String message) {
-        try {
-            APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-            response.setStatusCode(statusCode);
-            response.setHeaders(Map.of("Content-Type", "application/json"));
-            
-            Error error = new Error();
-            error.setCode(code);
-            error.setMessage(message);
-            
-            response.setBody(objectMapper.writeValueAsString(error));
-            return response;
-        } catch (JsonProcessingException e) {
-            logger.error("Error serializing error response", e);
-            
-            // Fallback to simple error response
-            APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-            response.setStatusCode(500);
-            response.setHeaders(Map.of("Content-Type", "application/json"));
-            response.setBody("{\"code\":\"INTERNAL_SERVER_ERROR\",\"message\":\"Error serializing error response\"}");
-            return response;
+        Error error = new Error(code, message);
+        return createResponse(statusCode, error);
+    }
+    
+    private APIGatewayProxyResponseEvent createResponse(int statusCode, Object body) {
+        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+        response.setStatusCode(statusCode);
+        
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Access-Control-Allow-Origin", "*");
+        response.setHeaders(headers);
+        
+        if (body != null) {
+            try {
+                response.setBody(objectMapper.writeValueAsString(body));
+            } catch (JsonProcessingException e) {
+                logger.error("Error serializing response body", e);
+                response.setBody("{\"code\":\"INTERNAL_SERVER_ERROR\",\"message\":\"Error serializing response\"}");
+            }
+        }
+        
+        return response;
+    }
+    
+    // Helper class for route keys
+    private static class RouteKey {
+        private final String method;
+        private final String path;
+        
+        public RouteKey(String method, String path) {
+            this.method = method;
+            this.path = path;
+        }
+        
+        public String getMethod() {
+            return method;
+        }
+        
+        public String getPath() {
+            return path;
+        }
+        
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            RouteKey routeKey = (RouteKey) o;
+            return method.equals(routeKey.method) && path.equals(routeKey.path);
+        }
+        
+        @Override
+        public int hashCode() {
+            return Objects.hash(method, path);
         }
     }
 }

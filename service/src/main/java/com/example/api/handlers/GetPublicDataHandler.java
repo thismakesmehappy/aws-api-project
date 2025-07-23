@@ -1,34 +1,34 @@
 package com.example.api.handlers;
 
-import com.example.api.repositories.DataRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Handler for the GetPublicData operation.
- * This handler processes requests to the public endpoint that doesn't require authentication.
+ * Handler for the GET /public endpoint.
  */
-public class GetPublicDataHandler {
-    private static final Logger logger = LoggerFactory.getLogger(GetPublicDataHandler.class);
+public class GetPublicDataHandler extends BaseHandler {
     
-    private final DataRepository dataRepository;
-    
-    /**
-     * Create a new GetPublicDataHandler.
-     */
-    public GetPublicDataHandler() {
-        this.dataRepository = new DataRepository();
+    @Override
+    public boolean requiresAuthentication() {
+        return false; // This is a public endpoint
     }
     
-    /**
-     * Handle a request to the public endpoint.
-     * 
-     * @return Map of public data
-     */
-    public Map<String, String> handle() {
-        logger.info("Processing public data request");
-        return dataRepository.getPublicData();
+    @Override
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
+        try {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "This is public data that anyone can access");
+            response.put("timestamp", Instant.now().toString());
+            
+            return createSuccessResponse(200, response);
+        } catch (Exception e) {
+            logger.error("Error getting public data", e);
+            return createErrorResponse(500, "INTERNAL_SERVER_ERROR", "Error retrieving public data");
+        }
     }
 }

@@ -1,0 +1,14 @@
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/utils/HeaderUtils.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/data/ItemEntity.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/model/NewItem.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/repositories/DataItem.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/handlers/BaseHandler.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/model/Error.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/ApiHandler.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/handlers/GetPublicDataHandler.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/services/AuthService.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/service/ItemService.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/model/Item.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/handlers/GetProtectedDataHandler.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/utils/HeaderUtils.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/service/src/main/java/com/example/api/repositories/DataRepository.java

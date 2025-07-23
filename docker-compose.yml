@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4571:4571"            # LocalStack Gateway (Legacy)
+    environment:
+      - TMPDIR=/tmp/localstack-new
+      - SERVICES=lambda,apigateway,dynamodb,cloudwatch,logs,iam
+      - DEBUG=1
+      - LAMBDA_EXECUTOR=docker
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    volumes:
+      - "${TMPDIR:-/tmp}/localstack-new:/tmp/localstack-new"
+      - "/var/run/docker.sock:/var/run/docker.sock"

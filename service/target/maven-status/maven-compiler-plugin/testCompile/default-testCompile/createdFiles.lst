@@ -1,0 +1,4 @@
+com/example/api/repositories/DataRepositoryTest.class
+com/example/api/ApiHandlerTest.class
+com/example/api/service/ItemServiceTest.class
+com/example/api/services/AuthServiceTest.class

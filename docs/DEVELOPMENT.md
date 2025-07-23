@@ -6,7 +6,7 @@ This guide provides detailed information for developers working on the AWS API P
 
 1. **Install Prerequisites**
    - Node.js 16+
-   - Java 11+
+   - Java 17+
    - Maven
    - AWS CLI
 
@@ -16,10 +16,34 @@ This guide provides detailed information for developers working on the AWS API P
    ```
    Use credentials with appropriate permissions for development.
 
+   > **Note**: The application is hardcoded to use the `us-east-1` region, so your AWS credentials should have access to this region.
+
 3. **Install Project Dependencies**
    ```bash
    npm run install:all
    ```
+
+4. **Java Toolchain Setup**
+   The project uses Maven toolchains to ensure Java 17 is used for compilation and testing, even if your system has a different Java version installed.
+   
+   Create a `~/.m2/toolchains.xml` file with the following content:
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <toolchains xmlns="http://maven.apache.org/TOOLCHAINS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://maven.apache.org/TOOLCHAINS/1.1.0 http://maven.apache.org/xsd/toolchains-1.1.0.xsd">
+     <toolchain>
+       <type>jdk</type>
+       <provides>
+         <version>17</version>
+         <vendor>openjdk</vendor>
+       </provides>
+       <configuration>
+         <jdkHome>/path/to/your/jdk17</jdkHome>
+       </configuration>
+     </toolchain>
+   </toolchains>
+   ```
+   Replace `/path/to/your/jdk17` with the actual path to your Java 17 installation.
 
 ## API Development
 
@@ -115,6 +139,25 @@ npm test
 - Follow least privilege principle
 - Keep dependencies updated
 
+## AWS Configuration
+
+### Region
+The application is hardcoded to use the `us-east-1` region. If you need to use a different region:
+
+1. Update the region in `ApiHandler.java`:
+   ```java
+   DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
+           .region(Region.US_EAST_1) // Change to your desired region
+           .build();
+   ```
+
+2. Update the region in `GetProtectedDataHandler.java`:
+   ```java
+   DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
+           .region(Region.US_EAST_1) // Change to your desired region
+           .build();
+   ```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -138,6 +181,11 @@ npm test
      ```
    - Validate OpenAPI syntax
    - Check for circular references
+
+4. **Java Version Issues**
+   - Ensure Java 17 is installed
+   - Verify Maven toolchains configuration
+   - Run `java -version` to check your default Java version
 
 ### Debugging
 

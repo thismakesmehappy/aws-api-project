@@ -1,42 +1,43 @@
 package com.example.api.service;
 
 import com.example.api.data.ItemEntity;
-import com.example.model.Item;
-import com.example.model.NewItem;
+import com.example.api.model.Item;
+import com.example.api.model.NewItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
-import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
-import java.util.List;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class ItemServiceTest {
     private DynamoDbEnhancedClient dynamoDbClient;
     private DynamoDbTable<ItemEntity> table;
     private ItemService itemService;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     @BeforeEach
+    @SuppressWarnings("unchecked")
     void setUp() {
         dynamoDbClient = mock(DynamoDbEnhancedClient.class);
         table = mock(DynamoDbTable.class);
-        when(dynamoDbClient.table(anyString(), any())).thenReturn(table);
+        when(dynamoDbClient.table(anyString(), any(TableSchema.class))).thenReturn(table);
         itemService = new ItemService(dynamoDbClient, "test-table");
     }
 
     @Test
     void createItem_Success() {
         // Arrange
-        NewItem newItem = new NewItem();
-        newItem.setName("Test Item");
-        newItem.setDescription("Test Description");
+        NewItem newItem = new NewItem("Test Item", "Test Description");
 
         ArgumentCaptor<ItemEntity> entityCaptor = ArgumentCaptor.forClass(ItemEntity.class);
 
@@ -48,26 +49,28 @@ class ItemServiceTest {
         ItemEntity capturedEntity = entityCaptor.getValue();
 
         assertNotNull(result);
-        assertEquals(newItem.getName(), result.getName());
-        assertEquals(newItem.getDescription(), result.getDescription());
-        assertNotNull(result.getId());
-        assertNotNull(result.getCreatedAt());
-        assertNotNull(result.getUpdatedAt());
+        assertEquals(newItem.name(), result.name());
+        assertEquals(newItem.description(), result.description());
+        assertNotNull(result.id());
+        assertNotNull(result.createdAt());
+        assertNotNull(result.updatedAt());
 
-        assertEquals(newItem.getName(), capturedEntity.getName());
-        assertEquals(newItem.getDescription(), capturedEntity.getDescription());
+        assertEquals(newItem.name(), capturedEntity.getName());
+        assertEquals(newItem.description(), capturedEntity.getDescription());
     }
 
     @Test
     void getItem_Success() {
         // Arrange
         String id = "test-id";
+        OffsetDateTime now = OffsetDateTime.now();
+        
         ItemEntity entity = new ItemEntity();
         entity.setId(id);
         entity.setName("Test Item");
         entity.setDescription("Test Description");
-        entity.setCreatedAt("2025-01-01T00:00:00Z");
-        entity.setUpdatedAt("2025-01-01T00:00:00Z");
+        entity.setCreatedAt(now.format(DATE_FORMATTER));
+        entity.setUpdatedAt(now.format(DATE_FORMATTER));
 
         when(table.getItem(any(Key.class))).thenReturn(entity);
 
@@ -76,11 +79,11 @@ class ItemServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(id, result.getId());
-        assertEquals(entity.getName(), result.getName());
-        assertEquals(entity.getDescription(), result.getDescription());
-        assertEquals(entity.getCreatedAt(), result.getCreatedAt());
-        assertEquals(entity.getUpdatedAt(), result.getUpdatedAt());
+        assertEquals(id, result.id());
+        assertEquals(entity.getName(), result.name());
+        assertEquals(entity.getDescription(), result.description());
+        assertEquals(now.format(DATE_FORMATTER), result.createdAt().format(DATE_FORMATTER));
+        assertEquals(now.format(DATE_FORMATTER), result.updatedAt().format(DATE_FORMATTER));
     }
 
     @Test
@@ -100,11 +103,15 @@ class ItemServiceTest {
     void updateItem_Success() {
         // Arrange
         String id = "test-id";
-        Item item = new Item();
-        item.setId(id);
-        item.setName("Updated Item");
-        item.setDescription("Updated Description");
-        item.setCreatedAt("2025-01-01T00:00:00Z");
+        OffsetDateTime now = OffsetDateTime.now();
+        
+        Item item = new Item(
+            id,
+            "Updated Item",
+            "Updated Description",
+            now,
+            now
+        );
 
         ItemEntity existingEntity = new ItemEntity();
         existingEntity.setId(id);
@@ -120,22 +127,30 @@ class ItemServiceTest {
         ItemEntity capturedEntity = entityCaptor.getValue();
 
         assertNotNull(result);
-        assertEquals(id, result.getId());
-        assertEquals(item.getName(), result.getName());
-        assertEquals(item.getDescription(), result.getDescription());
-        assertNotNull(result.getUpdatedAt());
+        assertEquals(id, result.id());
+        assertEquals(item.name(), result.name());
+        assertEquals(item.description(), result.description());
+        assertNotNull(result.updatedAt());
 
         assertEquals(id, capturedEntity.getId());
-        assertEquals(item.getName(), capturedEntity.getName());
-        assertEquals(item.getDescription(), capturedEntity.getDescription());
+        assertEquals(item.name(), capturedEntity.getName());
+        assertEquals(item.description(), capturedEntity.getDescription());
     }
 
     @Test
     void updateItem_NotFound() {
         // Arrange
         String id = "non-existent-id";
-        Item item = new Item();
-        item.setId(id);
+        OffsetDateTime now = OffsetDateTime.now();
+        
+        Item item = new Item(
+            id,
+            "Updated Item",
+            "Updated Description",
+            now,
+            now
+        );
+        
         when(table.getItem(any(Key.class))).thenReturn(null);
 
         // Act

@@ -18,15 +18,16 @@ aws-api-project/
 
 - **API Definition**: OpenAPI 3.0.3
 - **Infrastructure**: AWS CDK
-- **Runtime**: AWS Lambda with Java 11
+- **Runtime**: AWS Lambda with Java 17
 - **Database**: Amazon DynamoDB
 - **Authentication**: Amazon Cognito
 - **CI/CD**: GitHub Actions
+- **AWS Region**: us-east-1 (hardcoded in the application)
 
 ## Prerequisites
 
 - Node.js 16+
-- Java 11+
+- Java 17+
 - Maven
 - AWS CLI configured with appropriate credentials
 - GitHub account (for CI/CD)
@@ -76,6 +77,8 @@ The project uses GitHub Actions for automated deployments. See [CI/CD Documentat
 ## API Documentation
 
 The API is defined using OpenAPI 3.0.3. See [API Documentation](model/README.md) for details.
+
+For a comprehensive list of all available endpoints, request/response formats, and example usage, see [API Endpoints Documentation](docs/API_ENDPOINTS.md).
 
 ## Development Guide
 

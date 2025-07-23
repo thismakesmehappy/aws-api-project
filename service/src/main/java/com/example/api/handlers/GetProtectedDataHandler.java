@@ -1,38 +1,34 @@
 package com.example.api.handlers;
 
-import com.example.api.repositories.DataRepository;
-import com.example.api.services.AuthService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.example.api.utils.HeaderUtils;
 
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Handler for the GetProtectedData operation.
- * This handler processes requests to the protected endpoint that requires authentication.
+ * Handler for the GET /protected endpoint.
  */
-public class GetProtectedDataHandler {
-    private static final Logger logger = LoggerFactory.getLogger(GetProtectedDataHandler.class);
+public class GetProtectedDataHandler extends BaseHandler {
     
-    private final DataRepository dataRepository;
-    private final AuthService authService;
-    
-    /**
-     * Create a new GetProtectedDataHandler.
-     */
-    public GetProtectedDataHandler() {
-        this.dataRepository = new DataRepository();
-        this.authService = new AuthService();
-    }
-    
-    /**
-     * Handle a request to the protected endpoint.
-     * 
-     * @param userId The ID of the authenticated user
-     * @return Map of protected data
-     */
-    public Map<String, String> handle(String userId) {
-        logger.info("Processing protected data request for user: {}", userId);
-        return dataRepository.getProtectedData(userId);
+    @Override
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
+        try {
+            // In a real implementation, you would extract user information from the token
+            String userId = "user-123";
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "This is protected data that only authenticated users can access");
+            response.put("userId", userId);
+            response.put("timestamp", Instant.now().toString());
+            
+            return createSuccessResponse(200, response);
+        } catch (Exception e) {
+            logger.error("Error getting protected data", e);
+            return createErrorResponse(500, "INTERNAL_SERVER_ERROR", "Error retrieving protected data");
+        }
     }
 }

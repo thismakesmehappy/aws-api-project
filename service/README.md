@@ -15,6 +15,11 @@ AWS Coral is a framework for building serverless applications on AWS. It provide
 5. **Performance**: Java's performance benefits for Lambda functions
 6. **Mature Ecosystem**: Access to the rich Java ecosystem of libraries
 
+## Project Configuration
+
+- **Java Version**: Java 17 (configured via Maven toolchains)
+- **AWS Region**: us-east-1 (hardcoded in the application)
+
 ## Project Structure
 
 ```
@@ -56,6 +61,29 @@ service/
    ```bash
    mvn package
    ```
+
+## Maven Toolchains Setup
+
+The project uses Maven toolchains to ensure Java 17 is used for compilation and testing. Create a `~/.m2/toolchains.xml` file with the following content:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<toolchains xmlns="http://maven.apache.org/TOOLCHAINS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/TOOLCHAINS/1.1.0 http://maven.apache.org/xsd/toolchains-1.1.0.xsd">
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>17</version>
+      <vendor>openjdk</vendor>
+    </provides>
+    <configuration>
+      <jdkHome>/path/to/your/jdk17</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>
+```
+
+Replace `/path/to/your/jdk17` with the actual path to your Java 17 installation.
 
 ## Example Handler
 
@@ -117,6 +145,34 @@ public class GetProtectedDataHandler {
     }
 }
 ```
+
+## AWS Configuration
+
+The service is configured to use the `us-east-1` AWS region. This is hardcoded in the following files:
+
+- `ApiHandler.java`
+- `GetProtectedDataHandler.java`
+
+If you need to use a different region, you'll need to update these files.
+
+## API Endpoints
+
+The service implements the following endpoints:
+
+### Public Endpoints
+- `GET /public` - Get public data (no authentication required)
+
+### Protected Endpoints (require authentication)
+- `GET /protected` - Get protected data
+
+### Item Management Endpoints (require authentication)
+- `GET /items` - List all items
+- `POST /items` - Create a new item
+- `GET /items/{itemId}` - Get a specific item by ID
+- `PUT /items/{itemId}` - Update an existing item
+- `DELETE /items/{itemId}` - Delete an item
+
+For detailed information about request/response formats and example usage, see [API Endpoints Documentation](../docs/API_ENDPOINTS.md).
 
 ## Local Testing
 

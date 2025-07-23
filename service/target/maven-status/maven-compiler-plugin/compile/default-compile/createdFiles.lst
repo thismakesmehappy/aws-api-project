@@ -1,0 +1,14 @@
+com/example/api/handlers/GetProtectedDataHandler.class
+com/example/api/repositories/DataRepository.class
+com/example/api/model/Error.class
+com/example/api/repositories/DataItem.class
+com/example/utils/HeaderUtils.class
+com/example/api/utils/HeaderUtils.class
+com/example/api/data/ItemEntity.class
+com/example/api/model/NewItem.class
+com/example/api/handlers/GetPublicDataHandler.class
+com/example/api/handlers/BaseHandler.class
+com/example/api/service/ItemService.class
+com/example/api/model/Item.class
+com/example/api/ApiHandler.class
+com/example/api/services/AuthService.class
