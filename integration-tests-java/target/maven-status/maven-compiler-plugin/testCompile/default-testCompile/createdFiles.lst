@@ -1,0 +1,6 @@
+com/example/api/integration/PublicEndpointTest.class
+com/example/api/integration/ProtectedEndpointTest.class
+com/example/api/integration/model/Item.class
+com/example/api/integration/ItemsEndpointTest.class
+com/example/api/integration/BaseIntegrationTest.class
+com/example/api/integration/model/ErrorResponse.class

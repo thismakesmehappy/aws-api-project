@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "description": "Serverless API project using AWS free tier services",
   "scripts": {
-    "install:all": "npm install && cd infra && npm install && cd ../model && npm install && cd ../local-dev && npm install && cd ../integration-tests && npm install && cd ../service && mvn clean install",
+    "install:all": "npm install && cd infra && npm install && cd ../model && npm install && cd ../local-dev && npm install && cd ../service && mvn clean install",
     "start:local": "cd local-dev && npm start",
-    "test:integration": "cd integration-tests && npm test",
+    "test:integration": "bash -c 'cd /Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/local-dev && node server.js & SERVER_PID=$!; sleep 5; cd /Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java && mvn test -Dapi.base.url=http://localhost:3000; TEST_EXIT_CODE=$?; kill $SERVER_PID; exit $TEST_EXIT_CODE'",
     "test:service": "cd service && mvn test",
     "build:service": "cd service && mvn package",
     "deploy:dev": "cd service && mvn package && cd ../infra && npx cdk deploy DevApiStack",

@@ -1,0 +1,6 @@
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/src/test/java/com/example/api/integration/model/Item.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/src/test/java/com/example/api/integration/model/ErrorResponse.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/src/test/java/com/example/api/integration/PublicEndpointTest.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/src/test/java/com/example/api/integration/ItemsEndpointTest.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/src/test/java/com/example/api/integration/ProtectedEndpointTest.java
+/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/src/test/java/com/example/api/integration/BaseIntegrationTest.java
