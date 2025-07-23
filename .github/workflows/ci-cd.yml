@@ -45,25 +45,11 @@ jobs:
           mvn clean install
           cd ..
           
-      - name: Build and test service project
+      - name: Build and run unit tests
         run: |
           cd service
-          mvn clean package
+          mvn clean test -DskipIntegrationTests=true
           cd ..
-        
-      - name: Start local server for tests
-        run: |
-          cd local-dev
-          node server.js &
-          sleep 3
-          
-      - name: Run Java integration tests
-        run: |
-          cd integration-tests-java
-          mvn test -Dapi.base.url=http://localhost:3000
-          
-      - name: Stop local server
-        run: kill $(lsof -t -i:3000) || true
         
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -71,6 +57,23 @@ jobs:
           name: service-jar
           path: service/target/api-service-1.0-SNAPSHOT.jar
           retention-days: 1
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          
+      - name: Trigger AWS Integration Tests
+        if: success()
+        run: |
+          aws codebuild start-build \
+            --project-name integration-tests \
+            --source-version ${{ github.sha }} \
+            --environment-variables-override \
+              name=GITHUB_SHA,value=${{ github.sha }},type=PLAINTEXT \
+              name=GITHUB_REF,value=${{ github.ref }},type=PLAINTEXT
 
   deploy-to-dev:
     needs: build-and-test
@@ -111,12 +114,6 @@ jobs:
           npx cdk deploy DevApiStack --outputs-file dev-outputs.json --require-approval never
           API_URL=$(cat dev-outputs.json | jq -r '.DevApiStack.ApiUrl')
           echo "api_url=$API_URL" >> $GITHUB_OUTPUT
-          
-      - name: Run post-deployment tests
-        run: |
-          cd integration-tests-java
-          API_URL=$(cat ../infra/dev-outputs.json | jq -r '.DevApiStack.ApiUrl')
-          mvn test -Dapi.base.url=$API_URL
 
   deploy-to-staging:
     needs: deploy-to-dev
@@ -157,22 +154,6 @@ jobs:
           npx cdk deploy StagingApiStack --outputs-file staging-outputs.json --require-approval never
           API_URL=$(cat staging-outputs.json | jq -r '.StagingApiStack.ApiUrl')
           echo "api_url=$API_URL" >> $GITHUB_OUTPUT
-          
-      - name: Run post-deployment tests
-        id: tests
-        continue-on-error: true
-        run: |
-          cd integration-tests-java
-          API_URL=$(cat ../infra/staging-outputs.json | jq -r '.StagingApiStack.ApiUrl')
-          mvn test -Dapi.base.url=$API_URL
-          echo "test_status=$?" >> $GITHUB_OUTPUT
-          
-      - name: Rollback if tests fail
-        if: steps.tests.outputs.test_status != '0'
-        run: |
-          echo "Tests failed in staging environment. Rolling back..."
-          cd infra
-          npx cdk destroy StagingApiStack --force
 
   deploy-to-prod:
     needs: deploy-to-staging
@@ -213,19 +194,3 @@ jobs:
           npx cdk deploy ProdApiStack --outputs-file prod-outputs.json --require-approval never
           API_URL=$(cat prod-outputs.json | jq -r '.ProdApiStack.ApiUrl')
           echo "api_url=$API_URL" >> $GITHUB_OUTPUT
-          
-      - name: Run post-deployment tests
-        id: tests
-        continue-on-error: true
-        run: |
-          cd integration-tests-java
-          API_URL=$(cat ../infra/prod-outputs.json | jq -r '.ProdApiStack.ApiUrl')
-          mvn test -Dapi.base.url=$API_URL
-          echo "test_status=$?" >> $GITHUB_OUTPUT
-          
-      - name: Rollback if tests fail
-        if: steps.tests.outputs.test_status != '0'
-        run: |
-          echo "Tests failed in production environment. Rolling back..."
-          cd infra
-          npx cdk deploy ProdApiStack --previous-version

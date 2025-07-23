@@ -1,0 +1,62 @@
+{
+  "project": {
+    "name": "aws-api-project",
+    "description": "Serverless API project using AWS free tier services and OpenAPI",
+    "region": "us-east-1",
+    "environments": ["dev", "staging", "prod"]
+  },
+  "technology": {
+    "api": "OpenAPI 3.0.3",
+    "infrastructure": "AWS CDK",
+    "runtime": "Java 17",
+    "database": "DynamoDB",
+    "auth": "Amazon Cognito",
+    "cicd": "GitHub Actions"
+  },
+  "structure": {
+    "infra": "AWS CDK infrastructure code",
+    "model": "OpenAPI model definitions and generated code",
+    "service": "Lambda service implementation",
+    "integration-tests-java": "API integration tests",
+    "local-dev": "Local development utilities",
+    "scripts": "Development and deployment scripts"
+  },
+  "deployment": {
+    "type": "automated",
+    "tool": "GitHub Actions",
+    "environments": {
+      "dev": {
+        "protection": "none",
+        "auto_deploy": true
+      },
+      "staging": {
+        "protection": "optional_review",
+        "auto_deploy": true
+      },
+      "prod": {
+        "protection": "required_review",
+        "auto_deploy": false,
+        "requires_approval": true
+      }
+    }
+  },
+  "prerequisites": {
+    "node": "16+",
+    "java": "17+",
+    "tools": [
+      "Maven",
+      "AWS CLI",
+      "GitHub account"
+    ]
+  },
+  "cicd": {
+    "provider": "GitHub Actions",
+    "required_secrets": [
+      "AWS_ACCESS_KEY_ID",
+      "AWS_SECRET_ACCESS_KEY"
+    ],
+    "fixed_variables": {
+      "AWS_REGION": "us-east-1"
+    }
+  }
+}

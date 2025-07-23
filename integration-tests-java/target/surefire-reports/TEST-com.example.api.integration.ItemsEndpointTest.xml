@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.api.integration.ItemsEndpointTest" time="0.966" tests="7" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.api.integration.ItemsEndpointTest" time="1.003" tests="7" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="24"/>
     <property name="cognito.user.pool.id" value=""/>
@@ -14,7 +14,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk/24.0.1/libexec/openjdk.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/target/surefire/surefirebooter-20250723100009175_3.jar /Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/target/surefire 2025-07-23T10-00-09_133-jvmRun1 surefire-20250723100009175_1tmp surefire_0-20250723100009175_2tmp"/>
+    <property name="sun.java.command" value="/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/target/surefire/surefirebooter-20250723120839735_3.jar /Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/target/surefire 2025-07-23T12-08-39_674-jvmRun1 surefire-20250723120839735_1tmp surefire_0-20250723120839735_2tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/target/test-classes:/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/target/classes:/Users/bernardo/.m2/repository/io/rest-assured/rest-assured/5.3.0/rest-assured-5.3.0.jar:/Users/bernardo/.m2/repository/org/apache/groovy/groovy/4.0.6/groovy-4.0.6.jar:/Users/bernardo/.m2/repository/org/apache/groovy/groovy-xml/4.0.6/groovy-xml-4.0.6.jar:/Users/bernardo/.m2/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar:/Users/bernardo/.m2/repository/org/apache/httpcomponents/httpcore/4.4.13/httpcore-4.4.13.jar:/Users/bernardo/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/bernardo/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/Users/bernardo/.m2/repository/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar:/Users/bernardo/.m2/repository/org/hamcrest/hamcrest/2.1/hamcrest-2.1.jar:/Users/bernardo/.m2/repository/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar:/Users/bernardo/.m2/repository/io/rest-assured/json-path/5.3.0/json-path-5.3.0.jar:/Users/bernardo/.m2/repository/org/apache/groovy/groovy-json/4.0.6/groovy-json-4.0.6.jar:/Users/bernardo/.m2/repository/io/rest-assured/rest-assured-common/5.3.0/rest-assured-common-5.3.0.jar:/Users/bernardo/.m2/repository/io/rest-assured/xml-path/5.3.0/xml-path-5.3.0.jar:/Users/bernardo/.m2/repository/org/apache/commons/commons-lang3/3.11/commons-lang3-3.11.jar:/Users/bernardo/.m2/repository/org/junit/jupiter/junit-jupiter/5.9.2/junit-jupiter-5.9.2.jar:/Users/bernardo/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.2/junit-jupiter-api-5.9.2.jar:/Users/bernardo/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/Users/bernardo/.m2/repository/org/junit/platform/junit-platform-commons/1.9.2/junit-platform-commons-1.9.2.jar:/Users/bernardo/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/bernardo/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.9.2/junit-jupiter-params-5.9.2.jar:/Users/bernardo/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.2/junit-jupiter-engine-5.9.2.jar:/Users/bernardo/.m2/repository/org/junit/platform/junit-platform-engine/1.9.2/junit-platform-engine-1.9.2.jar:/Users/bernardo/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar:/Users/bernardo/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar:/Users/bernardo/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/cognitoidentityprovider/2.20.43/cognitoidentityprovider-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/aws-json-protocol/2.20.43/aws-json-protocol-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/third-party-jackson-core/2.20.43/third-party-jackson-core-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/protocol-core/2.20.43/protocol-core-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/sdk-core/2.20.43/sdk-core-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/profiles/2.20.43/profiles-2.20.43.jar:/Users/bernardo/.m2/repository/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/auth/2.20.43/auth-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/eventstream/eventstream/1.0.1/eventstream-1.0.1.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/http-client-spi/2.20.43/http-client-spi-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/regions/2.20.43/regions-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/annotations/2.20.43/annotations-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/utils/2.20.43/utils-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/aws-core/2.20.43/aws-core-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/metrics-spi/2.20.43/metrics-spi-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/json-utils/2.20.43/json-utils-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/endpoints-spi/2.20.43/endpoints-spi-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/apache-client/2.20.43/apache-client-2.20.43.jar:/Users/bernardo/.m2/repository/software/amazon/awssdk/netty-nio-client/2.20.43/netty-nio-client-2.20.43.jar:/Users/bernardo/.m2/repository/io/netty/netty-codec-http/4.1.86.Final/netty-codec-http-4.1.86.Final.jar:/Users/bernardo/.m2/repository/io/netty/netty-codec-http2/4.1.86.Final/netty-codec-http2-4.1.86.Final.jar:/Users/bernardo/.m2/repository/io/netty/netty-codec/4.1.86.Final/netty-codec-4.1.86.Final.jar:/Users/bernardo/.m2/repository/io/netty/netty-transport/4.1.86.Final/netty-transport-4.1.86.Final.jar:/Users/bernardo/.m2/repository/io/netty/netty-resolver/4.1.86.Final/netty-resolver-4.1.86.Final.jar:/Users/bernardo/.m2/repository/io/netty/netty-common/4.1.86.Final/netty-common-4.1.86.Final.jar:/Users/bernardo/.m2/repository/io/netty/netty-buffer/4.1.86.Final/netty-buffer-4.1.86.Final.jar:/Users/bernardo/.m2/repository/io/netty/netty-handler/4.1.86.Final/netty-handler-4.1.86.Final.jar:/Users/bernardo/.m2/repository/io/netty/netty-transport-native-unix-common/4.1.86.Final/netty-transport-native-unix-common-4.1.86.Final.jar:/Users/bernardo/.m2/repository/io/netty/netty-transport-classes-epoll/4.1.86.Final/netty-transport-classes-epoll-4.1.86.Final.jar:/Users/bernardo/.m2/repository/org/slf4j/slf4j-api/2.0.5/slf4j-api-2.0.5.jar:/Users/bernardo/.m2/repository/org/slf4j/slf4j-simple/2.0.5/slf4j-simple-2.0.5.jar:"/>
@@ -33,7 +33,7 @@
     <property name="test.password" value=""/>
     <property name="api.base.url" value="http://localhost:3000"/>
     <property name="apple.awt.application.name" value="ForkedBooter"/>
-    <property name="surefire.real.class.path" value="/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/target/surefire/surefirebooter-20250723100009175_3.jar"/>
+    <property name="surefire.real.class.path" value="/Users/bernardo/Dropbox/_CODE/TestAWSAPI/aws-api-project/integration-tests-java/target/surefire/surefirebooter-20250723120839735_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="24.0.1"/>
@@ -64,7 +64,7 @@
     <property name="java.class.version" value="68.0"/>
     <property name="cognito.client.id" value=""/>
   </properties>
-  <testcase name="testListItems" classname="com.example.api.integration.ItemsEndpointTest" time="0.597">
+  <testcase name="testListItems" classname="com.example.api.integration.ItemsEndpointTest" time="0.612">
     <system-out><![CDATA[Request method:	GET
 Request URI:	http://localhost:3000/items
 Proxy:			<none>
@@ -84,7 +84,7 @@ Access-Control-Allow-Origin: *
 Content-Type: application/json; charset=utf-8
 Content-Length: 2
 ETag: W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
-Date: Wed, 23 Jul 2025 14:00:10 GMT
+Date: Wed, 23 Jul 2025 16:08:40 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
@@ -92,11 +92,11 @@ Keep-Alive: timeout=5
     
 ]
 ]]></system-out>
-    <system-err><![CDATA[2025-07-23 10:00:09.474 [main] INFO BaseIntegrationTest - Using dummy token for local testing
-2025-07-23 10:00:09.475 [main] INFO BaseIntegrationTest - Using API base URL: http://localhost:3000
+    <system-err><![CDATA[2025-07-23 12:08:40.073 [main] INFO BaseIntegrationTest - Using dummy token for local testing
+2025-07-23 12:08:40.074 [main] INFO BaseIntegrationTest - Using API base URL: http://localhost:3000
 ]]></system-err>
   </testcase>
-  <testcase name="testCreateItem" classname="com.example.api.integration.ItemsEndpointTest" time="0.257">
+  <testcase name="testCreateItem" classname="com.example.api.integration.ItemsEndpointTest" time="0.27">
     <system-out><![CDATA[Request method:	POST
 Request URI:	http://localhost:3000/items
 Proxy:			<none>
@@ -122,25 +122,25 @@ X-Powered-By: Express
 Access-Control-Allow-Origin: *
 Content-Type: application/json; charset=utf-8
 Content-Length: 207
-ETag: W/"cf-ettwo/F3+3l5IiL39ek/ZGghL8A"
-Date: Wed, 23 Jul 2025 14:00:10 GMT
+ETag: W/"cf-i9vhIpWmD0AmBtGygrX3FLkelFQ"
+Date: Wed, 23 Jul 2025 16:08:40 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
 {
-    "id": "6afc1109-58fb-4da8-95ba-a3c1426d312d",
+    "id": "591360ac-256b-40d8-a903-5f4e431d3e56",
     "name": "Test Item",
     "description": "This is a test item created by integration tests",
-    "createdAt": "2025-07-23T14:00:10.170Z",
-    "updatedAt": "2025-07-23T14:00:10.170Z"
+    "createdAt": "2025-07-23T16:08:40.789Z",
+    "updatedAt": "2025-07-23T16:08:40.789Z"
 }
 ]]></system-out>
-    <system-err><![CDATA[2025-07-23 10:00:10.332 [main] INFO BaseIntegrationTest - Created item with ID: 6afc1109-58fb-4da8-95ba-a3c1426d312d
+    <system-err><![CDATA[2025-07-23 12:08:40.959 [main] INFO BaseIntegrationTest - Created item with ID: 591360ac-256b-40d8-a903-5f4e431d3e56
 ]]></system-err>
   </testcase>
-  <testcase name="testGetItem" classname="com.example.api.integration.ItemsEndpointTest" time="0.022">
+  <testcase name="testGetItem" classname="com.example.api.integration.ItemsEndpointTest" time="0.023">
     <system-out><![CDATA[Request method:	GET
-Request URI:	http://localhost:3000/items/6afc1109-58fb-4da8-95ba-a3c1426d312d
+Request URI:	http://localhost:3000/items/591360ac-256b-40d8-a903-5f4e431d3e56
 Proxy:			<none>
 Request params:	<none>
 Query params:	<none>
@@ -157,23 +157,23 @@ X-Powered-By: Express
 Access-Control-Allow-Origin: *
 Content-Type: application/json; charset=utf-8
 Content-Length: 207
-ETag: W/"cf-ettwo/F3+3l5IiL39ek/ZGghL8A"
-Date: Wed, 23 Jul 2025 14:00:10 GMT
+ETag: W/"cf-i9vhIpWmD0AmBtGygrX3FLkelFQ"
+Date: Wed, 23 Jul 2025 16:08:40 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
 {
-    "id": "6afc1109-58fb-4da8-95ba-a3c1426d312d",
+    "id": "591360ac-256b-40d8-a903-5f4e431d3e56",
     "name": "Test Item",
     "description": "This is a test item created by integration tests",
-    "createdAt": "2025-07-23T14:00:10.170Z",
-    "updatedAt": "2025-07-23T14:00:10.170Z"
+    "createdAt": "2025-07-23T16:08:40.789Z",
+    "updatedAt": "2025-07-23T16:08:40.789Z"
 }
 ]]></system-out>
   </testcase>
-  <testcase name="testUpdateItem" classname="com.example.api.integration.ItemsEndpointTest" time="0.021">
+  <testcase name="testUpdateItem" classname="com.example.api.integration.ItemsEndpointTest" time="0.025">
     <system-out><![CDATA[Request method:	PUT
-Request URI:	http://localhost:3000/items/6afc1109-58fb-4da8-95ba-a3c1426d312d
+Request URI:	http://localhost:3000/items/591360ac-256b-40d8-a903-5f4e431d3e56
 Proxy:			<none>
 Request params:	<none>
 Query params:	<none>
@@ -197,23 +197,23 @@ X-Powered-By: Express
 Access-Control-Allow-Origin: *
 Content-Type: application/json; charset=utf-8
 Content-Length: 209
-ETag: W/"d1-4fwmSxviKntVDvnes6yd6zQmLQc"
-Date: Wed, 23 Jul 2025 14:00:10 GMT
+ETag: W/"d1-s6nkAtrl7hP06dlx/bpKzTTA5xg"
+Date: Wed, 23 Jul 2025 16:08:40 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
 {
-    "id": "6afc1109-58fb-4da8-95ba-a3c1426d312d",
+    "id": "591360ac-256b-40d8-a903-5f4e431d3e56",
     "name": "Updated Test Item",
     "description": "This item was updated by integration tests",
-    "createdAt": "2025-07-23T14:00:10.170Z",
-    "updatedAt": "2025-07-23T14:00:10.362Z"
+    "createdAt": "2025-07-23T16:08:40.789Z",
+    "updatedAt": "2025-07-23T16:08:40.990Z"
 }
 ]]></system-out>
   </testcase>
   <testcase name="testDeleteItem" classname="com.example.api.integration.ItemsEndpointTest" time="0.016">
     <system-out><![CDATA[Request method:	DELETE
-Request URI:	http://localhost:3000/items/6afc1109-58fb-4da8-95ba-a3c1426d312d
+Request URI:	http://localhost:3000/items/591360ac-256b-40d8-a903-5f4e431d3e56
 Proxy:			<none>
 Request params:	<none>
 Query params:	<none>
@@ -228,11 +228,11 @@ Body:			<none>
 HTTP/1.1 204 No Content
 X-Powered-By: Express
 Access-Control-Allow-Origin: *
-Date: Wed, 23 Jul 2025 14:00:10 GMT
+Date: Wed, 23 Jul 2025 16:08:41 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 Request method:	GET
-Request URI:	http://localhost:3000/items/6afc1109-58fb-4da8-95ba-a3c1426d312d
+Request URI:	http://localhost:3000/items/591360ac-256b-40d8-a903-5f4e431d3e56
 Proxy:			<none>
 Request params:	<none>
 Query params:	<none>
@@ -250,7 +250,7 @@ Access-Control-Allow-Origin: *
 Content-Type: application/json; charset=utf-8
 Content-Length: 47
 ETag: W/"2f-js4HUQ34XBKyb6QVwxXhi5HVno0"
-Date: Wed, 23 Jul 2025 14:00:10 GMT
+Date: Wed, 23 Jul 2025 16:08:41 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
@@ -260,7 +260,7 @@ Keep-Alive: timeout=5
 }
 ]]></system-out>
   </testcase>
-  <testcase name="testGetNonExistentItem" classname="com.example.api.integration.ItemsEndpointTest" time="0.01">
+  <testcase name="testGetNonExistentItem" classname="com.example.api.integration.ItemsEndpointTest" time="0.011">
     <system-out><![CDATA[Request method:	GET
 Request URI:	http://localhost:3000/items/non-existent-id
 Proxy:			<none>
@@ -280,7 +280,7 @@ Access-Control-Allow-Origin: *
 Content-Type: application/json; charset=utf-8
 Content-Length: 47
 ETag: W/"2f-js4HUQ34XBKyb6QVwxXhi5HVno0"
-Date: Wed, 23 Jul 2025 14:00:10 GMT
+Date: Wed, 23 Jul 2025 16:08:41 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
@@ -290,7 +290,7 @@ Keep-Alive: timeout=5
 }
 ]]></system-out>
   </testcase>
-  <testcase name="testCreateItemWithInvalidData" classname="com.example.api.integration.ItemsEndpointTest" time="0.009">
+  <testcase name="testCreateItemWithInvalidData" classname="com.example.api.integration.ItemsEndpointTest" time="0.013">
     <system-out><![CDATA[Request method:	POST
 Request URI:	http://localhost:3000/items
 Proxy:			<none>
@@ -317,7 +317,7 @@ Access-Control-Allow-Origin: *
 Content-Type: application/json; charset=utf-8
 Content-Length: 51
 ETag: W/"33-sPaAUV2usV2qgPADO+uivWZxWPE"
-Date: Wed, 23 Jul 2025 14:00:10 GMT
+Date: Wed, 23 Jul 2025 16:08:41 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
